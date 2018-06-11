@@ -5,7 +5,7 @@ import json
 class DataLoader:
     """exposes the methods to index and update data from the cities"""
 
-    def __init__(self, hosts, index_name='anpr-index', doc_type='comuni', id_col_name='CODISTAT'):
+    def __init__(self, hosts, index_name='anpr', doc_type='comuni', id_col_name='CODISTAT'):
         self._hosts = hosts
         self._index_name = index_name
         self._doc_type = doc_type
@@ -33,6 +33,10 @@ class DataLoader:
         result = helpers.bulk(self._es, actions)
         return result
 
+    def delete_index(self):
+        if self._es.indices.exists(self._index_name):
+            self._es.indices.delete(self._index_name)
+
     def _create_index(self):
         if not self._es.indices.exists(self._index_name):
             self._es.indices.create(self._index_name)
@@ -51,10 +55,10 @@ class DataLoader:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Load data into Elasticsearch")
     parser.add_argument('--hosts', type=str, nargs='+', help='elastic hosts', required=True)
-    parser.add_argument('--index_name', default='anpr-index', help='the name of the index, default anpr-index')
+    parser.add_argument('--index_name', default='anpr-index', help='the name of the index, default anpr')
     parser.add_argument('--doc_type', default='comuni', help='the name of the doc type')
     parser.add_argument('--id_col', default='CODISTAT', help='the id column')
-    parser.add_argument('--action', default='index', help='action to perform can be update or index')
+    parser.add_argument('--action', default='index', help='action to perform can be update or  or delete')
     parser.add_argument('--source_path', help='the path of the json file with the data to index', required=True)
     args = parser.parse_args()
 
@@ -62,7 +66,15 @@ if __name__ == '__main__':
         data = json.load(f)
 
     loader = DataLoader(args.hosts, args.index_name, args.doc_type, args.id_col)
-    inserted, errors = loader.index_data(data)
-    print('loaded {} records'.format(inserted))
-
+    if args.action == 'index':
+        inserted, errors = loader.index_data(data)
+        print('loaded {} records'.format(inserted))
+    elif args.action == 'update':
+        inserted, errors = loader.update_data(data)
+        print('loaded {} records'.format(inserted))      
+    elif args.action == 'delete':
+        loader.delete_index()
+        print('delete index {}'.format(args.index_name))
+    else:
+        print('action not recognized')
 
