@@ -14,3 +14,15 @@ services:
       - "5601:5601"
     links:
       - elastic:elasticsearch
+
+  dataloader:
+    build: .
+    links:
+      - elastic:elastic
+    privileged: true
+    depends_on:
+      - elastic
+    volumes:
+    - .:/code
+    working_dir: /code
+    command: tox
