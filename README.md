@@ -57,6 +57,12 @@ dafanprapi_elastic_1   /docker-entrypoint.sh elas ...   Up      0.0.0.0:9200->92
 dafanprapi_kibana_1    /docker-entrypoint.sh kibana     Up      0.0.0.0:5601->5601/tcp   
 ```
 
+load data
+
+```
+python ./api/load/dataloader.py --hosts 127.0.0.1 --source_path ./data/full.json
+```
+
 #### Kibana
 
 To check if the values are loaded you can user [sense](http://localhost:5601/app/kibana#/dev_tools/console?_g=()) and run a `match_all` query.
