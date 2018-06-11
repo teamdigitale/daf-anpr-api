@@ -57,7 +57,7 @@ if __name__ == '__main__':
     parser.add_argument('--hosts', type=str, nargs='+', help='elastic hosts', required=True)
     parser.add_argument('--index_name', default='anpr', help='the name of the index, default anpr')
     parser.add_argument('--doc_type', default='comuni', help='the name of the doc type')
-    parser.add_argument('--id_col', default='CODISTAT', help='the id column')
+    parser.add_argument('--id_col', default='codistat', help='the id column')
     parser.add_argument('--action', default='index', help='action to perform can be update or  or delete')
     parser.add_argument('--source_path', help='the path of the json file with the data to index', required=True)
     args = parser.parse_args()
