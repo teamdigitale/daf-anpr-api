@@ -11,6 +11,7 @@ from swagger_server.test import BaseTestCase
 
 
 class TestPublicController(BaseTestCase):
+
     """PublicController integration test stubs"""
 
     def test_get_echo(self):

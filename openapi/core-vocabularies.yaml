@@ -238,104 +238,6 @@ paths:
           $ref: '#/components/responses/503ServiceUnavailable'
         default:
           $ref: '#/components/responses/default'
-  /tables:
-    get:
-      summary: Get informations about exiting tables.
-      description: |
-        Shows a list of supported tables matching the given name.
-      operationId: getTables
-      tags:
-      - public
-      parameters:
-      - $ref: '#/components/parameters/dictionary_name'
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/offset'
-      - $ref: '#/components/parameters/sort'
-      responses:
-        200:
-          description: |
-            A list of Tables.
-          headers:
-            X-RateLimit-Limit:
-              $ref: '#/components/headers/X-RateLimit-Limit'
-            X-RateLimit-Remaining:
-              $ref: '#/components/headers/X-RateLimit-Remaining'
-            X-RateLimit-Reset:
-              $ref: '#/components/headers/X-RateLimit-Reset'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tables'
-  /table/{table_uuid}/:
-    get:
-      summary: Get entries from a given table.
-      description: |
-        Retrieve paged entries from a Table.
-      operationId: getTableEntries
-      tags:
-      - public
-      parameters:
-      - $ref: '#/components/parameters/table_uuid_path'
-      - $ref: '#/components/parameters/name'
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/offset'
-      - $ref: '#/components/parameters/sort'
-      responses:
-        200:
-          description: |
-            Retrieve table data
-          headers:
-            X-RateLimit-Limit:
-              $ref: '#/components/headers/X-RateLimit-Limit'
-            X-RateLimit-Remaining:
-              $ref: '#/components/headers/X-RateLimit-Remaining'
-            X-RateLimit-Reset:
-              $ref: '#/components/headers/X-RateLimit-Reset'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Entries'
-        400:
-          $ref: '#/components/responses/400BadRequest'
-        404:
-          $ref: '#/components/responses/404NotFound'
-        default:
-          $ref: '#/components/responses/default'
-  /table/{table_uuid}/{entry_key}:
-    get:
-      summary: Get a Table entry
-      operationId: getEntryByTable
-      description: Retrieve an entry from a Table.
-      tags:
-      - public
-      parameters:
-      - $ref: '#/components/parameters/table_uuid_path'
-      - $ref: '#/components/parameters/entry_key_path'
-      responses:
-        200:
-          description: |
-            Returns the given entry.
-          headers:
-            X-RateLimit-Limit:
-              $ref: '#/components/headers/X-RateLimit-Limit'
-            X-RateLimit-Remaining:
-              $ref: '#/components/headers/X-RateLimit-Remaining'
-            X-RateLimit-Reset:
-              $ref: '#/components/headers/X-RateLimit-Reset'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Entries'
-        400:
-          $ref: '#/components/responses/400BadRequest'
-        404:
-          $ref: '#/components/responses/404NotFound'
-        429:
-          $ref: '#/components/responses/429TooManyRequests'
-        503:
-          $ref: '#/components/responses/503ServiceUnavailable'
-        default:
-          $ref: '#/components/responses/default'
 components:
   parameters:
     limit:
@@ -418,7 +320,7 @@ components:
       - offset
       - offset_next
       properties:
-        item:
+        items:
           type: array
           items:
             $ref: '#/components/schemas/Dictionary'
@@ -437,6 +339,7 @@ components:
       - name
       - description
       - last_version
+      - versions
       - uri
       properties:
         name:
@@ -448,12 +351,18 @@ components:
             Which data is contained in the dictionary? Cities? Foreign countries?
             Healtcare codes?
         last_version:
-          type: integer
-          example: 134
+          type: string
+          example: latest
+        versions:
+          type: string
+          example: v134
         uri:
           type: string
           format: uri
           example: http://dictionaries-beta.api.example.com/dictionaries/cities
+        meta:
+          type: object
+          description: meta-informations on the dictionary. May be implementation-specific.
     Table:
       description: |
         Versioned dictionary.
@@ -552,7 +461,7 @@ components:
       - offset
       - offset_next
       properties:
-        item:
+        items:
           type: array
           items:
             $ref: '#/components/schemas/Entry'
@@ -560,6 +469,11 @@ components:
           type: string
           format: uri
           example: http://dictionaries-beta.api.example.com/table/2b356821-868e-4274-9c8e-ca119dd097df
+        count:
+          type: integer
+          format: int32
+          description: Total entries count, independently of limit.
+          example: 1231
         offset:
           type: integer
           format: int32

@@ -9,7 +9,8 @@ tox.ini
 
 # You can make changes and tell Swagger Codgen to ignore just this implementation files:
 swagger_server/__main__.py
-swagger_server/controller/public_controller.py
+swagger_server/controllers/public_controller.py
+swagger_server/controllers/admins_controller.py
 
 # You can match any string of characters against a directory, file or extension with a single asterisk (*):
 #foo/*/qux
