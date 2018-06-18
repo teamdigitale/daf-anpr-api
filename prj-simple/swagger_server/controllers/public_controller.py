@@ -98,7 +98,7 @@ def get_dictionary_version(dictionary_name, version, name=None, limit=10, offset
     """
     c = Elasticsearch(hosts='elastic')
     if version == 'latest':
-        version = tools.get_index_doctypes(es, dictionary_name)
+        version = tools.get_index_doctypes(c, dictionary_name)
     if not version:
         return problem(status=404, title=f"No version",
                       detail=f"No versions for {dictionary_name}")
