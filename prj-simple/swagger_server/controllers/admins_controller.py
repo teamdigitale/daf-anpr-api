@@ -7,6 +7,8 @@ from swagger_server.models.table_data import TableData  # noqa: E501
 from swagger_server import util, tools
 from swagger_server.controllers.public_controller import get_dictionary
 
+from connexion import problem
+
 from elasticsearch import Elasticsearch, helpers
 import json
 from datetime import datetime
