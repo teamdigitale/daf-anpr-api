@@ -1,4 +1,7 @@
-# ANPR datasets per i comuni
+# ANPR datasets per i comuni [MVP]
+
+*NOTE*: This app is work-in-progress. The implementation is
+        a quick and dirty hack around connexion and elasticsearch.
 
 Install the required libraries with
 
@@ -14,6 +17,24 @@ This project provides the notebooks and code to:
 
 
 ## API
+
+
+### Prepare the environment
+
+The infrastructure is based on:
+
+  - elasticsearch
+  - kibana browser
+  - an one-shot python container for dataloader
+  - a running python-flask containter with the app.
+
+To create the infrastructure containers and import data:
+
+         make setup
+
+To generate code and run the application:
+
+	make app-run	
 
 ### Load data into Elasticsearch
 

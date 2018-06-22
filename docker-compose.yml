@@ -14,3 +14,39 @@ services:
       - "5601:5601"
     links:
       - elastic:elasticsearch
+
+  dataloader:
+    build: api
+    links:
+      - elastic:elastic
+    privileged: true
+    depends_on:
+      - elastic
+    volumes:
+    - .:/code
+    working_dir: /code
+    command: tox
+
+  test:
+    build: prj-simple
+    volumes:
+    - ./prj-simple:/code:z
+    working_dir: /code
+    entrypoint: /bin/sh
+    command: -c 'pip install tox && tox'
+  
+  simple:
+    build: prj-simple
+    volumes:
+    - ./prj-simple:/code
+    ports:
+    - "8080:8080"
+    - "8443:8443"
+  
+  dev:
+    build: prj-simple
+    volumes:
+    - ./prj-simple:/code
+    entrypoint: /bin/sh
+    command: -c 'while true; do sleep 1; done'
+  
