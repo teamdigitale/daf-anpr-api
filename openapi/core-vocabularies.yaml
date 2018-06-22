@@ -43,6 +43,8 @@ tags:
 servers:
 - description: SwaggerHub API Auto Mocking
   url: https://virtserver.swaggerhub.com/robipolli/core-vocabularies/0.0.1
+- description: SwaggerHub API Auto Mocking
+  url: https://localhost:8443/core-vocabularies/0.0.1
 paths:
   /dictionaries:
     get:
@@ -254,6 +256,13 @@ components:
       example: Latina
       schema:
         type: string
+    index:
+      name: index
+      in: query
+      required: true
+      example: codistat
+      schema:
+        type: string
     dictionary_name_path:
       name: dictionary_name
       in: path
@@ -341,6 +350,7 @@ components:
       - last_version
       - versions
       - uri
+      - index
       properties:
         name:
           type: string
@@ -360,6 +370,10 @@ components:
           type: string
           format: uri
           example: http://dictionaries-beta.api.example.com/dictionaries/cities
+        index:
+          type: string
+          description: The field used as a primary key
+          example: codistat
         meta:
           type: object
           description: meta-informations on the dictionary. May be implementation-specific.
@@ -417,21 +431,28 @@ components:
       description: |
         Dictionary data, freely inspired by  https://github.com/italia/daf-ontologie-vocabolari-controllati/
       required:
-      - name
-      - ttl
-      - data
+      - index
+      - items
       properties:
+        index:
+          type: string
+          description: The item field to be used as an index.
+          example: codIstat
         name:
           type: string
           example: cities
+        description:
+          type: string
+          example: A list of cities
         ttl:
           type: integer
           format: int32
           description: Seconds to the invalidation of the API.
-        data:
+        items:
+          description: A list of object, all of the same structure.
           type: array
           items:
-            $ref: '#/components/schemas/Entry'
+            type: object
     Entry:
       required:
       - key
