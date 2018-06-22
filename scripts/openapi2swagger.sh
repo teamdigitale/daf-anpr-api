@@ -5,15 +5,27 @@ die(){
 	echo "ERROR: $@"
 	exit 1
 }
+help(){
+        echo "
+        This script requires gnu coreutils. If you are on mac please
+        - check readlink behavior (eg. use greadlink)
+        - remove trailing \":z\" from docker run as it's selinux specific.
+        "
+}
+normpath(){
+        # Normalize path.
+        readlink -f "$1"
+}
+
 : ${1?Please specify a file to convert}
-FROM="$(readlink -f $1)"; shift
+FROM="$(normpath "$1")"; shift
 test -f "$FROM" || die "File not found: $FROM"
 
 which docker >&2 || die "You need docker to run this file."
 
 build(){
 	# Eventually build docker image.
-	docker >&2 build -t api-spec-converter $(dirname $(readlink -f $0))  || die "Cannot build docker image."
+	docker >&2 build -t api-spec-converter $(dirname $(normpath $0))  || die "Cannot build docker image."
 }
 
 docker run --rm \
