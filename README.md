@@ -3,6 +3,37 @@
 *NOTE*: This app is work-in-progress. The implementation is
         a quick and dirty hack around connexion and elasticsearch.
 
+## Prepare the environment
+
+The infrastructure is based on docker:
+
+  - elasticsearch
+  - kibana browser
+  - an one-shot python container for dataloader
+  - a running python-flask containter with the app.
+
+To create the infrastructure containers and import data:
+
+        make setup
+
+To generate code and run the application:
+
+	      make app-run
+
+
+## API
+
+The OpenAPI interface is in `openapi/core-vocabularies.yaml`
+
+To get all dictionares:
+
+```
+$ curl -kv https://localhost:8443/robipolli/core-vocabularies/0.0.1/dictionaries
+```
+
+
+## Local development
+
 Install the required libraries with
 
 ```
@@ -15,26 +46,6 @@ This project provides the notebooks and code to:
 2. integrate it with istat data
 3. load the processed dataset into elastichsearch (test, and prod env)
 
-
-## API
-
-
-### Prepare the environment
-
-The infrastructure is based on:
-
-  - elasticsearch
-  - kibana browser
-  - an one-shot python container for dataloader
-  - a running python-flask containter with the app.
-
-To create the infrastructure containers and import data:
-
-         make setup
-
-To generate code and run the application:
-
-	make app-run	
 
 ### Load data into Elasticsearch
 
@@ -72,10 +83,10 @@ In order to develop the service you can run an elasticsearch and kibana instance
 $ docker-compose up -d
 $ docker-compose ps
 
-        Name                      Command               State                Ports              
+        Name                      Command               State                Ports
 ------------------------------------------------------------------------------------------------
 dafanprapi_elastic_1   /docker-entrypoint.sh elas ...   Up      0.0.0.0:9200->9200/tcp, 9300/tcp
-dafanprapi_kibana_1    /docker-entrypoint.sh kibana     Up      0.0.0.0:5601->5601/tcp   
+dafanprapi_kibana_1    /docker-entrypoint.sh kibana     Up      0.0.0.0:5601->5601/tcp
 ```
 
 load data
@@ -97,8 +108,7 @@ GET _search
 }
 ```
 
-### Production Setup
-
+## Production Setup
 
 Elastic Host: 192.168.0.43 (available only via vpn). At [this link](http://192.168.0.43:5601/app/kibana#/dev_tools/console?_g=()) is available kibana with the [sense plugin](https://www.elastic.co/guide/en/sense/current/sense-ui.html).
 
