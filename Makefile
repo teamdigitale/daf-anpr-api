@@ -1,4 +1,3 @@
-
 YAML=$(shell find * -name \*yaml)
 YAMLSRC=$(shell find openapi -name \*yaml.src)
 YAMLGEN=$(patsubst %.yaml.src,%.yaml,$(YAMLSRC))
@@ -14,11 +13,7 @@ yaml: $(YAMLGEN)
 #
 # dataloader
 #
-prepare:
-	which git-lfs || curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && apt -y install git-lfs
-	git lfs pull
-
-setup: prepare
+setup:
 	docker-compose up -d elastic kibana
 	docker-compose up dataloader
 
@@ -47,4 +42,3 @@ app-test: prj-simple/swagger_server/swagger/swagger.yaml
 app-run: prj-simple/swagger_server/swagger/swagger.yaml
 	# Build and run the application
 	docker-compose up --build simple
-
